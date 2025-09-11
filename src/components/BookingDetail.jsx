@@ -12,7 +12,7 @@ const BookingDetail = () => {
   const [bookingStatus, setBookingStatus] = useState('');
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/bookings/${id}`)
+    axios.get(`https://mombasa-backend.onrender.com/bookings/${id}`)
       .then(res => {
         if (res.data.Status) {
           setBooking(res.data.Result);
@@ -30,7 +30,7 @@ const BookingDetail = () => {
   };
 
   const handleUpdate = () => {
-    axios.put(`http://localhost:5000/bookings/${id}`, { booking_status: bookingStatus })
+    axios.put(`https://mombasa-backend.onrender.com/bookings/${id}`, { booking_status: bookingStatus })
       .then(res => {
         if (res.data.Status) {
           alert('Booking updated successfully.');

@@ -8,7 +8,7 @@ const StaffDetail = () => {
   const [staff, setStaff] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/staff/detail/' + id)
+    fetch('https://mombasa-backend.onrender.com/staff/detail/' + id)
       .then((response) => response.json())
       .then((data) => setStaff(data))
       .catch((error) => console.error('Error fetching staff data:', error));

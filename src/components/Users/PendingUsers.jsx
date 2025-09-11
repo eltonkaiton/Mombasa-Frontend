@@ -8,7 +8,7 @@ function PendingUsers() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users?status=pending')
+    axios.get('https://mombasa-backend.onrender.com/api/users?status=pending')
       .then(response => {
         const users = Array.isArray(response.data)
           ? response.data
@@ -37,7 +37,7 @@ function PendingUsers() {
   }, [searchTerm, pendingUsers]);
 
   const handleStatusChange = (id, status) => {
-    axios.put(`http://localhost:5000/api/users/${id}/status`, { status })
+    axios.put(`https://mombasa-backend.onrender.com/api/users/${id}/status`, { status })
       .then(() => {
         setPendingUsers(prev => prev.filter(user => user._id !== id));
         setFilteredUsers(prev => prev.filter(user => user._id !== id));

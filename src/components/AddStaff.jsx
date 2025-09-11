@@ -15,7 +15,7 @@ const AddStaff = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:5000/admin/category')
+    axios.get('https://mombasa-backend.onrender.com/admin/category')
       .then((res) => {
         if (res.data.Status) {
           setCategoryList(res.data.Result || []);
@@ -45,7 +45,7 @@ const AddStaff = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:5000/admin/add_staff', staffData);
+      const response = await axios.post('https://mombasa-backend.onrender.com/admin/add_staff', staffData);
       if (response.data.Status) {
         alert('Staff added successfully!');
         navigate('/dashboard/staff');

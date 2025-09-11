@@ -8,7 +8,7 @@ function ActiveUsers() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users?status=active')
+    axios.get('https://mombasa-backend.onrender.com/api/users?status=active')
       .then(response => {
         const users = Array.isArray(response.data) ? response.data
                      : response.data.users || [];
@@ -34,7 +34,7 @@ function ActiveUsers() {
   }, [searchTerm, activeUsers]);
 
   const handleSuspend = (id) => {
-    axios.put(`http://localhost:5000/api/users/${id}/status`, { status: 'suspended' })
+    axios.put(`https://mombasa-backend.onrender.com/api/users/${id}/status`, { status: 'suspended' })
       .then(() => {
         setActiveUsers(prev => prev.filter(user => user._id !== id));
         setFilteredUsers(prev => prev.filter(user => user._id !== id));

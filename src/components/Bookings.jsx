@@ -9,7 +9,7 @@ const Bookings = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/bookings')
+    axios.get('https://mombasa-backend.onrender.com/bookings')
       .then(res => {
         if (res.data.Status) {
           setBookings(res.data.Result);

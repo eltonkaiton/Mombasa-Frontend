@@ -8,7 +8,7 @@ function SuspendedUsers() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users?status=suspended')
+    axios.get('https://mombasa-backend.onrender.com/api/users?status=suspended')
       .then(response => {
         const data = response.data;
         const usersArray = Array.isArray(data) ? data
@@ -36,7 +36,7 @@ function SuspendedUsers() {
   }, [searchTerm, suspendedUsers]);
 
   const handleActivate = (_id) => {
-    axios.put(`http://localhost:5000/api/users/${_id}/status`, { status: 'active' })
+    axios.put(`https://mombasa-backend.onrender.com/api/users/${_id}/status`, { status: 'active' })
       .then(() => {
         setSuspendedUsers(prev => prev.filter(user => user._id !== _id));
         setFilteredUsers(prev => prev.filter(user => user._id !== _id));
@@ -45,7 +45,7 @@ function SuspendedUsers() {
   };
 
   const handleReject = (_id) => {
-    axios.put(`http://localhost:5000/api/users/${_id}/status`, { status: 'rejected' })
+    axios.put(`https://mombasa-backend.onrender.com/api/users/${_id}/status`, { status: 'rejected' })
       .then(() => {
         setSuspendedUsers(prev => prev.filter(user => user._id !== _id));
         setFilteredUsers(prev => prev.filter(user => user._id !== _id));

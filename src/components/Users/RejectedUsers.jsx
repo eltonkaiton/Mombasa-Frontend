@@ -8,7 +8,7 @@ function RejectedUsers() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users?status=rejected')
+    axios.get('https://mombasa-backend.onrender.com/api/users?status=rejected')
       .then(response => {
         const data = response.data;
         const usersArray = Array.isArray(data)
@@ -38,7 +38,7 @@ function RejectedUsers() {
   }, [searchTerm, rejectedUsers]);
 
   const handleApprove = (_id) => {
-    axios.put(`http://localhost:5000/api/users/${_id}/status`, { status: 'active' })
+    axios.put(`https://mombasa-backend.onrender.com/api/users/${_id}/status`, { status: 'active' })
       .then(() => {
         setRejectedUsers(prev => prev.filter(user => user._id !== _id));
         setFilteredUsers(prev => prev.filter(user => user._id !== _id));
