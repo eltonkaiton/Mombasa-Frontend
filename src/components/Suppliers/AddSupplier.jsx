@@ -12,6 +12,7 @@ function AddSupplier() {
   });
 
   const navigate = useNavigate();
+  // Testing how to push a new change to github
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
