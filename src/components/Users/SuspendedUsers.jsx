@@ -7,25 +7,30 @@ function SuspendedUsers() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // ✅ Local backend URL
+  const API_URL = "http://localhost:5000";
+
+  // ✅ Fetch suspended users
   useEffect(() => {
-    axios.get('https://mombasa-backend.onrender.com/api/users?status=suspended')
+    axios
+      .get(`${API_URL}/users?status=suspended`)
       .then(response => {
-        const data = response.data;
-        const usersArray = Array.isArray(data) ? data
-          : Array.isArray(data.users) ? data.users
-          : [];
-        setSuspendedUsers(usersArray);
-        setFilteredUsers(usersArray);
+        const users = Array.isArray(response.data)
+          ? response.data
+          : response.data.Users || [];
+        setSuspendedUsers(users);
+        setFilteredUsers(users);
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching suspended users:', error);
+        console.error('Error fetching suspended users:', error.response?.data || error.message);
         setSuspendedUsers([]);
         setFilteredUsers([]);
         setLoading(false);
       });
   }, []);
 
+  // ✅ Search filter
   useEffect(() => {
     const term = searchTerm.toLowerCase();
     const filtered = suspendedUsers.filter(user =>
@@ -35,22 +40,17 @@ function SuspendedUsers() {
     setFilteredUsers(filtered);
   }, [searchTerm, suspendedUsers]);
 
-  const handleActivate = (_id) => {
-    axios.put(`https://mombasa-backend.onrender.com/api/users/${_id}/status`, { status: 'active' })
+  // ✅ Change status handler
+  const handleStatusChange = (id, status) => {
+    axios
+      .put(`${API_URL}/users/${id}/status`, { status })
       .then(() => {
-        setSuspendedUsers(prev => prev.filter(user => user._id !== _id));
-        setFilteredUsers(prev => prev.filter(user => user._id !== _id));
+        setSuspendedUsers(prev => prev.filter(user => user._id !== id));
+        setFilteredUsers(prev => prev.filter(user => user._id !== id));
       })
-      .catch(err => console.error(err));
-  };
-
-  const handleReject = (_id) => {
-    axios.put(`https://mombasa-backend.onrender.com/api/users/${_id}/status`, { status: 'rejected' })
-      .then(() => {
-        setSuspendedUsers(prev => prev.filter(user => user._id !== _id));
-        setFilteredUsers(prev => prev.filter(user => user._id !== _id));
-      })
-      .catch(err => console.error(err));
+      .catch(err =>
+        console.error('Error updating user status:', err.response?.data || err.message)
+      );
   };
 
   if (loading) return <p>Loading suspended users...</p>;
@@ -70,10 +70,15 @@ function SuspendedUsers() {
       {filteredUsers.length === 0 ? (
         <p>No suspended users found.</p>
       ) : (
-        <table className="table table-striped">
+        <table className="table table-striped table-hover">
           <thead>
             <tr>
-              <th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Created At</th><th>Actions</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Created At</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -83,10 +88,20 @@ function SuspendedUsers() {
                 <td>{user.full_name}</td>
                 <td>{user.email}</td>
                 <td>{user.phone || '-'}</td>
-                <td>{user.createdAt ? new Date(user.createdAt).toLocaleString() : '-'}</td>
+                <td>{new Date(user.created_at).toLocaleString()}</td>
                 <td>
-                  <button className="btn btn-success me-2" onClick={() => handleActivate(user._id)}>Activate</button>
-                  <button className="btn btn-danger" onClick={() => handleReject(user._id)}>Reject</button>
+                  <button
+                    className="btn btn-success me-2"
+                    onClick={() => handleStatusChange(user._id, 'active')}
+                  >
+                    Reactivate
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleStatusChange(user._id, 'rejected')}
+                  >
+                    Reject Permanently
+                  </button>
                 </td>
               </tr>
             ))}

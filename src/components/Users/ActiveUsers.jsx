@@ -1,45 +1,62 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+// ActiveUsers.jsx
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function ActiveUsers() {
   const [activeUsers, setActiveUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
+  // Fetch active users on mount
   useEffect(() => {
-    axios.get('https://mombasa-backend.onrender.com/api/users?status=active')
-      .then(response => {
-        const users = Array.isArray(response.data) ? response.data
-                     : response.data.users || [];
+    axios
+      .get("http://localhost:5000/users?status=active") // ✅ correct local endpoint
+      .then((response) => {
+        const users = Array.isArray(response.data)
+          ? response.data
+          : response.data.Users || []; // match backend response format
+
         setActiveUsers(users);
         setFilteredUsers(users);
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching active users:', error);
+      .catch((error) => {
+        console.error(
+          "Error fetching active users:",
+          error.response?.data || error.message
+        );
         setActiveUsers([]);
         setFilteredUsers([]);
         setLoading(false);
       });
   }, []);
 
+  // Filter users by search term
   useEffect(() => {
     const term = searchTerm.toLowerCase();
-    const filtered = activeUsers.filter(user =>
-      (user.full_name || '').toLowerCase().includes(term) ||
-      (user.email || '').toLowerCase().includes(term)
+    const filtered = activeUsers.filter(
+      (user) =>
+        (user.full_name || "").toLowerCase().includes(term) ||
+        (user.email || "").toLowerCase().includes(term)
     );
     setFilteredUsers(filtered);
   }, [searchTerm, activeUsers]);
 
+  // Suspend user handler
   const handleSuspend = (id) => {
-    axios.put(`https://mombasa-backend.onrender.com/api/users/${id}/status`, { status: 'suspended' })
+    axios
+      .put(`http://localhost:5000/users/${id}/status`, { status: "suspended" })
       .then(() => {
-        setActiveUsers(prev => prev.filter(user => user._id !== id));
-        setFilteredUsers(prev => prev.filter(user => user._id !== id));
+        setActiveUsers((prev) => prev.filter((user) => user._id !== id));
+        setFilteredUsers((prev) => prev.filter((user) => user._id !== id));
       })
-      .catch(err => console.error(err));
+      .catch((err) =>
+        console.error(
+          "Error suspending user:",
+          err.response?.data || err.message
+        )
+      );
   };
 
   if (loading) return <p>Loading active users...</p>;
@@ -53,7 +70,7 @@ function ActiveUsers() {
         className="form-control mb-3"
         placeholder="Search by name or email..."
         value={searchTerm}
-        onChange={e => setSearchTerm(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
 
       {filteredUsers.length === 0 ? (
@@ -76,8 +93,8 @@ function ActiveUsers() {
                 <td>{index + 1}</td>
                 <td>{user.full_name}</td>
                 <td>{user.email}</td>
-                <td>{user.phone || '-'}</td>
-                <td>{new Date(user.createdAt).toLocaleString()}</td>
+                <td>{user.phone || "-"}</td>
+                <td>{new Date(user.created_at).toLocaleString()}</td>
                 <td>
                   <button
                     className="btn btn-warning btn-sm"

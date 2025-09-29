@@ -7,20 +7,22 @@ function PendingUsers() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // ✅ Local backend URL
+  const API_URL = "http://localhost:5000";
+
   useEffect(() => {
-    axios.get('https://mombasa-backend.onrender.com/api/users?status=pending')
+    axios
+      .get(`${API_URL}/users?status=pending`)
       .then(response => {
         const users = Array.isArray(response.data)
           ? response.data
-          : Array.isArray(response.data.users)
-          ? response.data.users
-          : [];
+          : response.data.Users || []; // ✅ match backend key
         setPendingUsers(users);
         setFilteredUsers(users);
         setLoading(false);
       })
       .catch(error => {
-        console.error('Error fetching pending users:', error);
+        console.error('Error fetching pending users:', error.response?.data || error.message);
         setPendingUsers([]);
         setFilteredUsers([]);
         setLoading(false);
@@ -37,12 +39,15 @@ function PendingUsers() {
   }, [searchTerm, pendingUsers]);
 
   const handleStatusChange = (id, status) => {
-    axios.put(`https://mombasa-backend.onrender.com/api/users/${id}/status`, { status })
+    axios
+      .put(`${API_URL}/users/${id}/status`, { status })
       .then(() => {
         setPendingUsers(prev => prev.filter(user => user._id !== id));
         setFilteredUsers(prev => prev.filter(user => user._id !== id));
       })
-      .catch(err => console.error(err));
+      .catch(err =>
+        console.error('Error updating user status:', err.response?.data || err.message)
+      );
   };
 
   if (loading) return <p>Loading pending users...</p>;
@@ -80,7 +85,7 @@ function PendingUsers() {
                 <td>{user.full_name}</td>
                 <td>{user.email}</td>
                 <td>{user.phone || '-'}</td>
-                <td>{new Date(user.createdAt).toLocaleString()}</td>
+                <td>{new Date(user.created_at).toLocaleString()}</td>
                 <td>
                   <button
                     className="btn btn-success me-2"
