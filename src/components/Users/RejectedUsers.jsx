@@ -8,7 +8,7 @@ function RejectedUsers() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // ✅ Local backend URL
-  const API_URL = "http://localhost:5000";
+  const API_URL = "https://mombasa-backend.onrender.com";
 
   // ✅ Fetch rejected users
   useEffect(() => {
