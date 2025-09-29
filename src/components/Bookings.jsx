@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -60,9 +61,54 @@ const Bookings = () => {
     doc.save(`Booking_${booking._id}.pdf`);
   };
 
-  // Generate receipts for all bookings
+  // Generate one PDF with all bookings in table format
   const handleGenerateAllReceipts = () => {
-    bookings.forEach((b) => handleViewReceipt(b));
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text('All Bookings Receipt', 105, 20, null, null, 'center');
+    doc.setFontSize(12);
+    doc.text(`Total Bookings: ${bookings.length}`, 20, 30);
+
+    // Table headers
+    const tableColumn = [
+      'ID',
+      'Passenger Name',
+      'Email',
+      'Type',
+      'Date',
+      'Time',
+      'Route',
+      'Amount Paid',
+      'Payment',
+      'Status',
+    ];
+
+    // Table rows
+    const tableRows = bookings.map((b) => [
+      b._id,
+      b.user_id?.full_name || 'N/A',
+      b.user_id?.email || 'N/A',
+      b.booking_type,
+      b.travel_date,
+      b.travel_time,
+      b.route,
+      Number(b.amount_paid || 0).toLocaleString(),
+      b.payment_status,
+      b.booking_status,
+    ]);
+
+    // Generate table using jspdf-autotable
+    autoTable(doc, {
+      startY: 40,
+      head: [tableColumn],
+      body: tableRows,
+      theme: 'grid',
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [0, 0, 0] },
+    });
+
+    doc.save('All_Bookings.pdf');
   };
 
   if (loading) return <p>Loading bookings...</p>;
