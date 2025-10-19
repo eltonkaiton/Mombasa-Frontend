@@ -18,7 +18,7 @@ function UserRegister() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/register', formData);
+      await axios.post('https://mombasa-backend.onrender.com/api/auth/register', formData);
       alert('Registration successful! Your account is pending approval.');
       navigate('/userlogin');
     } catch (err) {

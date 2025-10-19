@@ -10,7 +10,7 @@ const Staff = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/admin/staff')
+    axios.get('https://mombasa-backend.onrender.com/admin/staff')
       .then(result => {
         if (!result.data.Status) {
           setError(result.data.Error || 'No staff found.');
@@ -43,7 +43,7 @@ const Staff = () => {
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this staff member?')) {
-      axios.delete(`http://localhost:5000/admin/delete_staff/${id}`)
+      axios.delete(`https://mombasa-backend.onrender.com/admin/delete_staff/${id}`)
         .then(result => {
           if (result.data.Status) {
             setStaff(prev => prev.filter(s => s._id !== id));

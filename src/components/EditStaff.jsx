@@ -23,7 +23,7 @@ const EditStaff = () => {
     setLoading(true);
 
     // Fetch categories
-    axios.get('http://localhost:5000/admin/category')
+    axios.get('https://mombasa-backend.onrender.com/admin/category')
       .then(res => {
         if (res.data.Status) {
           setCategoryList(res.data.Result || []);
@@ -37,7 +37,7 @@ const EditStaff = () => {
       });
 
     // Fetch staff data
-    axios.get(`http://localhost:5000/admin/staff/${id}`)
+    axios.get(`https://mombasa-backend.onrender.com/admin/staff/${id}`)
       .then(res => {
         if (res.data.Status) {
           const fetched = res.data.Result;
@@ -75,7 +75,7 @@ const EditStaff = () => {
         delete updatedStaff.password; // Only send password if filled
       }
 
-      const res = await axios.put(`http://localhost:5000/admin/staff/${id}`, updatedStaff);
+      const res = await axios.put(`https://mombasa-backend.onrender.com/admin/staff/${id}`, updatedStaff);
       if (res.data.Status) {
         navigate('/dashboard/staff');
       } else {

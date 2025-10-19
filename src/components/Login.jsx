@@ -24,7 +24,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post('http://localhost:5000/admin/adminlogin', values); // ✅ Adjust if your route has changed
+      const res = await axios.post('https://mombasa-backend.onrender.com/admin/adminlogin', values); // ✅ Adjust if your route has changed
 
       if (res.data.loginStatus || res.data.token) {
         const { token } = res.data;
