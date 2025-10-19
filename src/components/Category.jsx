@@ -8,7 +8,7 @@ const Category = () => {
   const [error, setError] = useState(''); // Track errors
 
   useEffect(() => {
-    axios.get('https://mombasa-backend.onrender.com/admin/category')
+    axios.get('http://localhost:5000/admin/category')
       .then(result => {
         console.log(result.data); // Inspect structure
 

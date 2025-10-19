@@ -8,7 +8,7 @@ function PendingUsers() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // ✅ Local backend URL
-  const API_URL = "https://mombasa-backend.onrender.com";
+  const API_URL = "http://localhost:5000";
 
   useEffect(() => {
     axios

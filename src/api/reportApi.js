@@ -1,7 +1,7 @@
 // src/api/reportApi.js
 import axios from 'axios';
 
-const BASE_URL = 'https://mombasa-backend.onrender.com/api/reports'; // change if needed
+const BASE_URL = 'http://localhost:5000/api/reports'; // change if needed
 
 export const getPaymentReports = async () => {
   const res = await axios.get(`${BASE_URL}/payments`);

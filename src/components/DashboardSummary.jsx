@@ -21,7 +21,7 @@ function DashboardSummary() {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const res = await axios.get('https://mombasa-backend.onrender.com/api/reports/daily');
+        const res = await axios.get('http://localhost:5000/api/reports/daily');
         setReport(res.data);
       } catch (err) {
         setError('Failed to load daily report.');

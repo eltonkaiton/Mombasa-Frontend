@@ -21,7 +21,7 @@ function AddSupplier() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post('https://mombasa-backend.onrender.com/admin/suppliers', form); // ✅ Send password
+      await axios.post('http://localhost:5000/admin/suppliers', form); // ✅ Send password
       navigate('/dashboard/suppliers');
     } catch (err) {
       console.error(err.response?.data || err.message);

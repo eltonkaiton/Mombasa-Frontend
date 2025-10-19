@@ -26,7 +26,7 @@ const AddUser = () => {
     };
 
     try {
-      const response = await axios.post('https://mombasa-backend.onrender.com/admin/add_user', formData);
+      const response = await axios.post('http://localhost:5000/admin/add_user', formData);
       if (response.data.Status) {
         alert('User added successfully!');
         navigate('/dashboard/users/active');
