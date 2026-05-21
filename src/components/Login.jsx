@@ -1,124 +1,168 @@
 import React, { useState } from "react";
-import './styles.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "./styles.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Login = () => {
-  const [values, setValues] = useState({ email: '', password: '' });
+  const [values, setValues] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [agree, setAgree] = useState(false);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   axios.defaults.withCredentials = true;
+
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!agree) {
-      setError("You must agree to the Terms and Conditions before submitting.");
+      setError("You must agree to the Terms and Conditions.");
       return;
     }
 
     setError("");
+    setLoading(true);
 
     try {
-      const res = await axios.post('https://mombasa-backend-1.onrender.com/admin/adminlogin', values); // ✅ Adjust if your route has changed
+      const res = await axios.post(
+        "https://mombasa-backend-1.onrender.com/admin/adminlogin",
+        values
+      );
 
-      if (res.data.loginStatus || res.data.token) {
-        const { token } = res.data;
+      const token = res.data?.token;
 
-        // ✅ Optionally decode the token if needed:
-        const user = JSON.parse(atob(token.split('.')[1])); // or use jwt-decode
+      if (!token) {
+        setError(res.data?.error || "Login failed");
+        return;
+      }
 
-        // Store token (localStorage or cookie — here using localStorage)
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+      // Safe decode (avoids crash if token is invalid)
+      let user = null;
+      try {
+        user = JSON.parse(atob(token.split(".")[1]));
+      } catch (err) {
+        console.warn("Token decode failed:", err);
+      }
 
-        // Redirect based on role (if present in token)
-        if (user.role === 'admin') {
-          navigate('/dashboard');
-        } else if (user.role === 'staff') {
-          navigate('/staff');
-        } else {
-          navigate('/home');
-        }
+      localStorage.setItem("token", token);
+      if (user) localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirect logic
+      const role = user?.role;
+
+      if (role === "admin") {
+        navigate("/dashboard");
+      } else if (role === "staff") {
+        navigate("/staff");
       } else {
-        setError(res.data.Error || "Login failed");
+        navigate("/home");
       }
     } catch (err) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.error || 'Something went wrong. Please try again.');
+      console.error("Login error:", err);
+      setError(
+        err.response?.data?.error ||
+          err.response?.data?.Error ||
+          "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className='d-flex justify-content-center align-items-center vh-100 loginPage'>
-      <div className='p-3 rounded w-25 border loginForm'>
-        {error && <div className="text-danger mb-2">{error}</div>}
+    <div className="d-flex justify-content-center align-items-center vh-100 loginPage">
+      <div className="p-4 rounded border loginForm w-25">
+        <h2 className="mb-3">Login</h2>
 
-        <h2>Login Page</h2>
+        {error && (
+          <div className="alert alert-danger py-2">{error}</div>
+        )}
+
         <form onSubmit={handleSubmit}>
-          <div className='mb-3'>
-            <label htmlFor="email"><strong>Email:</strong></label>
+          {/* EMAIL */}
+          <div className="mb-3">
+            <label><strong>Email</strong></label>
             <input
               type="email"
               name="email"
-              autoComplete="off"
-              placeholder="Enter Email"
-              onChange={(e) => setValues({ ...values, email: e.target.value })}
-              className='form-control rounded-0'
+              placeholder="Enter email"
+              className="form-control rounded-0"
+              value={values.email}
+              onChange={handleChange}
               required
             />
           </div>
 
-          <div className='mb-3'>
-            <label htmlFor="password"><strong>Password:</strong></label>
+          {/* PASSWORD */}
+          <div className="mb-3">
+            <label><strong>Password</strong></label>
+
             <div className="input-group">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                autoComplete="off"
-                placeholder="Enter Password"
-                onChange={(e) => setValues({ ...values, password: e.target.value })}
-                className='form-control rounded-0'
+                placeholder="Enter password"
+                className="form-control rounded-0"
+                value={values.password}
+                onChange={handleChange}
                 required
               />
+
               <span
                 className="input-group-text bg-white"
                 style={{ cursor: "pointer" }}
                 onClick={() => setShowPassword(!showPassword)}
               >
-                <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                <i
+                  className={`fa ${
+                    showPassword ? "fa-eye-slash" : "fa-eye"
+                  }`}
+                />
               </span>
             </div>
+
             <div className="mt-1">
-              <a href="/forgot-password" className="text-decoration-none text-primary" style={{ fontSize: "0.9rem" }}>
+              <a
+                href="/forgot-password"
+                className="text-decoration-none"
+                style={{ fontSize: "0.9rem" }}
+              >
                 Forgot Password?
               </a>
             </div>
           </div>
 
+          {/* TERMS */}
           <div className="mb-3 form-check">
             <input
               type="checkbox"
               className="form-check-input"
               id="termsCheck"
               checked={agree}
-              onChange={() => setAgree(!agree)}
+              onChange={(e) => setAgree(e.target.checked)}
             />
             <label className="form-check-label" htmlFor="termsCheck">
-              I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions</a>
+              I agree to the{" "}
+              <a href="/terms" target="_blank" rel="noreferrer">
+                Terms and Conditions
+              </a>
             </label>
           </div>
 
+          {/* BUTTON */}
           <button
             type="submit"
-            className='btn btn-success w-100 rounded-0'
-            disabled={!agree}
+            className="btn btn-success w-100 rounded-0"
+            disabled={!agree || loading}
           >
-            Submit
+            {loading ? "Logging in..." : "Submit"}
           </button>
         </form>
       </div>
