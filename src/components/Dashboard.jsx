@@ -81,11 +81,11 @@ function Dashboard() {
       };
 
       if (type === 'booking') {
-        const res = await axios.get('https://mombasa-backend.onrender.com/bookings/payments', config);
+        const res = await axios.get('https://mombasa-backend-1.onrender.com/bookings/payments', config);
         const data = res.data;
         setBookingPayments(Array.isArray(data.payments) ? data.payments : data);
       } else if (type === 'order') {
-        const res = await axios.get('https://mombasa-backend.onrender.com/api/orders/payments', config);
+        const res = await axios.get('https://mombasa-backend-1.onrender.com/api/orders/payments', config);
         const data = res.data;
         setOrderPayments(Array.isArray(data.payments) ? data.payments : data);
       }

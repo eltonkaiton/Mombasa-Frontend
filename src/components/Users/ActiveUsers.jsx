@@ -11,7 +11,7 @@ function ActiveUsers() {
   // Fetch active users on mount
   useEffect(() => {
     axios
-      .get("https://mombasa-backend.onrender.com/users?status=active") // ✅ correct local endpoint
+      .get("https://mombasa-backend-1.onrender.com/users?status=active") // ✅ correct local endpoint
       .then((response) => {
         const users = Array.isArray(response.data)
           ? response.data
@@ -46,7 +46,7 @@ function ActiveUsers() {
   // Suspend user handler
   const handleSuspend = (id) => {
     axios
-      .put(`https://mombasa-backend.onrender.com/users/${id}/status`, { status: "suspended" })
+      .put(`https://mombasa-backend-1.onrender.com/users/${id}/status`, { status: "suspended" })
       .then(() => {
         setActiveUsers((prev) => prev.filter((user) => user._id !== id));
         setFilteredUsers((prev) => prev.filter((user) => user._id !== id));

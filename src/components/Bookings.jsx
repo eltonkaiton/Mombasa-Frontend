@@ -19,7 +19,7 @@ const Bookings = () => {
       }
 
       try {
-        const res = await axios.get('https://mombasa-backend.onrender.com/bookings', {
+        const res = await axios.get('https://mombasa-backend-1.onrender.com/bookings', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

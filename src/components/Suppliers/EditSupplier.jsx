@@ -15,7 +15,7 @@ function EditSupplier() {
   });
 
   useEffect(() => {
-    axios.get(`https://mombasa-backend.onrender.com/admin/suppliers/${id}`)
+    axios.get(`https://mombasa-backend-1.onrender.com/admin/suppliers/${id}`)
       .then(res => {
         if (res.data?.Status) {
           const supplier = res.data.Result;
@@ -47,7 +47,7 @@ function EditSupplier() {
       if (!form.password) {
         delete updatedForm.password; // Don't send if empty
       }
-      await axios.put(`https://mombasa-backend.onrender.com/admin/suppliers/${id}`, updatedForm);
+      await axios.put(`https://mombasa-backend-1.onrender.com/admin/suppliers/${id}`, updatedForm);
       navigate('/dashboard/suppliers');
     } catch (err) {
       console.error(err);

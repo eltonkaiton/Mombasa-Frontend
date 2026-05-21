@@ -8,7 +8,7 @@ const AddCategory = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('https://mombasa-backend.onrender.com/admin/add_category', { category }) // ✅ Updated URL
+    axios.post('https://mombasa-backend-1.onrender.com/admin/add_category', { category }) // ✅ Updated URL
       .then(result => {
         if (result.data.Status) {
           navigate('/dashboard/category'); // ✅ Redirect on success

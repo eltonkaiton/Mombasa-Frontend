@@ -6,7 +6,7 @@ function SupplierList() {
   const [suppliers, setSuppliers] = useState([]);
 
   const fetchSuppliers = () => {
-    axios.get('https://mombasa-backend.onrender.com/admin/suppliers')
+    axios.get('https://mombasa-backend-1.onrender.com/admin/suppliers')
       .then(res => {
         if (res.data?.Status) {
           setSuppliers(res.data.Result);
@@ -21,7 +21,7 @@ function SupplierList() {
 
   const handleDelete = id => {
     if (window.confirm("Are you sure you want to delete this supplier?")) {
-      axios.delete(`https://mombasa-backend.onrender.com/admin/suppliers/${id}`)
+      axios.delete(`https://mombasa-backend-1.onrender.com/admin/suppliers/${id}`)
         .then(() => fetchSuppliers())
         .catch(err => {
           console.error(err);
